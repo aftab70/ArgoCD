@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: tomcat
-        image: aftab70/maven:TAG_NAME_HERE
+        image: aftab70/maven:22
         ports:
         - containerPort: 8080
         
