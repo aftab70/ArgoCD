@@ -5,7 +5,6 @@ This is the Jave sample project to test your Apache tomcat server along with mav
 - Git
 - Java
 - Maven
-- VirtualBox
 - Tomcat8 
 
 ## CI and CD Process
