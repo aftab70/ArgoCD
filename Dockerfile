@@ -1,4 +1,4 @@
-FROM ubutnu:22.04 
+FROM ubuntu:22.04 
 USER root 
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install openjdk-11-jdk -y
