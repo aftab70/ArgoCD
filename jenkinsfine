@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+    tools {
+        maven 'maven'
+    }
+	environment {
+		DOCKERHUB_CREDENTIALS=credentials('Dockerhub')
+	}    
+    
+
+    stages {
+        stage('Git Checkout') {
+            steps {
+                git credentialsId: 'github', url: 'https://github.com/aftab70/maven-docker-kubernetes_lab.git'
+            }
+        }
+        stage('Maven Build') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t aftab70/maven:${BUILD_NUMBER} .'
+            }
+        }            
+		stage('Login') {
+
+			steps {
+				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+			}
+		}
+
+		stage('Push') {
+
+			steps {
+				sh 'docker push aftab70/maven:${BUILD_NUMBER}'
+			}
+		}
+		stage('Deploy on K8s') {
+
+			steps {
+            sh 'scp deployment.yaml aftab@192.168.49.1:/tmp'
+            sh 'ssh aftab@192.168.49.1 kubectl create -f /tmp/deployment.yaml'
+			}
+		}		
+	}
+
+	post {
+		always {
+			sh 'docker logout'
+		}
+	}
+
+}
